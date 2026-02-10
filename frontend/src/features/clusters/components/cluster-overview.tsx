@@ -321,7 +321,8 @@ export function ClusterOverview(props: ClusterOverviewProps) {
                     <span>
                       {gpus.map((gpu, idx) => (
                         <div key={idx}>
-                          {gpu.count}x {gpu.manufacturer} {gpu.model} ({Math.round(gpu.memoryMb / 1024)}GB)
+                          {gpu.count}x {gpu.manufacturer} {gpu.model} (
+                          {Math.round(gpu.memoryMb / 1024)}GB)
                         </div>
                       ))}
                     </span>

@@ -84,17 +84,19 @@ export function NodeOverview(props: NodeOverviewProps) {
               },
               {
                 key: 'GPUs',
-                value: node.gpus.length > 0 ? (
-                  <div className='space-y-1'>
-                    {node.gpus.map((gpu, index) => (
-                      <div key={index}>
-                        {gpu.count}x {gpu.manufacturer} {gpu.model} ({Math.round(gpu.memoryMb / 1024)}GB)
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <span>&ndash;</span>
-                ),
+                value:
+                  node.gpus.length > 0 ? (
+                    <div className='space-y-1'>
+                      {node.gpus.map((gpu, index) => (
+                        <div key={index}>
+                          {gpu.count}x {gpu.manufacturer} {gpu.model} (
+                          {Math.round(gpu.memoryMb / 1024)}GB)
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <span>&ndash;</span>
+                  ),
               },
             ]}
           />
