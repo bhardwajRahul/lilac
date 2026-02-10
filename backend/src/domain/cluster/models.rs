@@ -107,6 +107,9 @@ pub enum GpuModel {
     #[serde(rename = "A10G")]
     #[strum(serialize = "A10G")]
     A10G,
+    #[serde(rename = "A30")]
+    #[strum(serialize = "A30")]
+    A30,
     #[serde(rename = "B200")]
     #[strum(serialize = "B200")]
     B200,
@@ -119,6 +122,9 @@ pub enum GpuModel {
     #[serde(rename = "L4")]
     #[strum(serialize = "L4")]
     L4,
+    #[serde(rename = "L40")]
+    #[strum(serialize = "L40")]
+    L40,
     #[serde(rename = "L40S")]
     #[strum(serialize = "L40S")]
     L40S,
@@ -157,7 +163,7 @@ pub struct ClusterNode {
     pub heartbeat_timestamp: DateTime<Utc>,
     pub memory_mb: i32,
     pub cpu: Cpu,
-    pub gpu: Option<Gpu>,
+    pub gpus: Vec<Gpu>,
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
     pub assigned_job_id: Option<JobId>,
@@ -170,7 +176,7 @@ impl ClusterNode {
         cluster_id: ClusterId,
         memory_mb: i32,
         cpu: Cpu,
-        gpu: Option<Gpu>,
+        gpus: Vec<Gpu>,
     ) -> Self {
         Self {
             id: node_id,
@@ -179,7 +185,7 @@ impl ClusterNode {
             heartbeat_timestamp: Utc::now(),
             memory_mb,
             cpu,
-            gpu,
+            gpus,
             created_at: Utc::now(),
             updated_at: Utc::now(),
             assigned_job_id: None,
@@ -201,7 +207,7 @@ pub struct UpdateNodeStatusRequest {
     pub heartbeat_timestamp: DateTime<Utc>,
     pub memory_info: i32,
     pub cpu_info: Cpu,
-    pub gpu_info: Option<Gpu>,
+    pub gpu_info: Vec<Gpu>,
     pub job_info: Option<JobInfo>,
 }
 
@@ -264,7 +270,7 @@ impl ClusterNode {
             heartbeat_timestamp: Utc::now(),
             memory_mb: 0,
             cpu: Cpu::new_mock(),
-            gpu: None,
+            gpus: vec![],
             created_at: Utc::now(),
             updated_at: Utc::now(),
             assigned_job_id: None,

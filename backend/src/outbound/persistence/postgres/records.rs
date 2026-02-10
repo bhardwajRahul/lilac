@@ -200,6 +200,8 @@ pub enum GpuModelRecord {
     A100,
     #[sqlx(rename = "A10G")]
     A10G,
+    #[sqlx(rename = "A30")]
+    A30,
     #[sqlx(rename = "B200")]
     B200,
     #[sqlx(rename = "H100")]
@@ -208,6 +210,8 @@ pub enum GpuModelRecord {
     H200,
     #[sqlx(rename = "L4")]
     L4,
+    #[sqlx(rename = "L40")]
+    L40,
     #[sqlx(rename = "L40S")]
     L40S,
     #[sqlx(rename = "T4")]
@@ -225,10 +229,12 @@ impl From<GpuModel> for GpuModelRecord {
             GpuModel::GaudiHL205 => Self::GaudiHL205,
             GpuModel::A100 => Self::A100,
             GpuModel::A10G => Self::A10G,
+            GpuModel::A30 => Self::A30,
             GpuModel::B200 => Self::B200,
             GpuModel::H100 => Self::H100,
             GpuModel::H200 => Self::H200,
             GpuModel::L4 => Self::L4,
+            GpuModel::L40 => Self::L40,
             GpuModel::L40S => Self::L40S,
             GpuModel::T4 => Self::T4,
             GpuModel::T4g => Self::T4g,
@@ -244,10 +250,12 @@ impl From<GpuModelRecord> for GpuModel {
             GpuModelRecord::GaudiHL205 => Self::GaudiHL205,
             GpuModelRecord::A100 => Self::A100,
             GpuModelRecord::A10G => Self::A10G,
+            GpuModelRecord::A30 => Self::A30,
             GpuModelRecord::B200 => Self::B200,
             GpuModelRecord::H100 => Self::H100,
             GpuModelRecord::H200 => Self::H200,
             GpuModelRecord::L4 => Self::L4,
+            GpuModelRecord::L40 => Self::L40,
             GpuModelRecord::L40S => Self::L40S,
             GpuModelRecord::T4 => Self::T4,
             GpuModelRecord::T4g => Self::T4g,
@@ -284,7 +292,7 @@ pub struct ClusterNodeRecord {
     pub heartbeat_timestamp: DateTime<Utc>,
     pub memory_mb: i32,
     pub cpu: CpuConfigurationRecord,
-    pub gpu: Option<GpuConfigurationRecord>,
+    pub gpus: Vec<GpuConfigurationRecord>,
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
     pub assigned_job_id: Option<uuid::Uuid>,
@@ -307,12 +315,12 @@ impl From<ClusterNodeRecord> for ClusterNode {
                 architecture: record.cpu.architecture.into(),
                 millicores: record.cpu.millicores,
             },
-            gpu: record.gpu.map(|gpu| Gpu {
+            gpus: record.gpus.into_iter().map(|gpu| Gpu {
                 manufacturer: gpu.manufacturer.into(),
                 model: gpu.model_name.into(),
                 count: gpu.count,
                 memory_mb: gpu.memory_mb,
-            }),
+            }).collect(),
             created_at: record.created_at,
             updated_at: record.updated_at,
             assigned_job_id: record.assigned_job_id.map(Into::into),
